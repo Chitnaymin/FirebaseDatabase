@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "906780525489",
+    "firebase_url": "https://dbtest-7dd25.firebaseio.com",
+    "project_id": "dbtest-7dd25",
+    "storage_bucket": "dbtest-7dd25.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:906780525489:android:32ea55a350a50ba8d87390",
+        "android_client_info": {
+          "package_name": "com.cte.dbtest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "906780525489-anbqkhpp2bar5ueum5kofegc5v0cpr3h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEzc7ftkuTI51FiyjWLWzZiBid_h4kH3k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "906780525489-anbqkhpp2bar5ueum5kofegc5v0cpr3h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "906780525489-7o65i565tdiim0orlu3d6s1a19okkpoj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.test.t",
+                "app_store_id": "65454"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
