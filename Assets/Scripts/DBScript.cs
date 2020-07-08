@@ -5,25 +5,23 @@ using UnityEngine.UI;
 using Firebase;
 using Firebase.Unity.Editor;
 using Firebase.Database;
+using Newtonsoft.Json;
 
-public class DBScript : MonoBehaviour
-{
+public class DBScript : MonoBehaviour {
 	public string userId;
 	public InputField _name;
 	public InputField _email;
 	public Text txtLoadData;
 
-    // Start is called before the first frame update
-    void Start()
-    {
+	// Start is called before the first frame update
+	void Start() {
 		FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://dbtest-7dd25.firebaseio.com/");
 	}
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	// Update is called once per frame
+	void Update() {
+
+	}
 
 	private void writeNewUser(string userId, string name, string email) {
 		DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
@@ -36,20 +34,29 @@ public class DBScript : MonoBehaviour
 	public void SaveDB() {
 		string name = _name.text;
 		string email = _email.text;
-		writeNewUser(userId,name,email);
+		writeNewUser(userId, name, email);
 	}
 
 	public void RetrieveData() {
-	FirebaseDatabase reference=FirebaseDatabase.DefaultInstance;
-	 reference.GetReference("users").GetValueAsync().ContinueWith(task => {
-		  if (task.IsFaulted) {
-			  // Handle the error...
-		  } else if (task.IsCompleted) {
-			  DataSnapshot snapshot = task.Result;
-			 // Do something with snapshot...
-			 Debug.Log("Here");	
+		FirebaseDatabase reference = FirebaseDatabase.DefaultInstance;
+		reference.GetReference("users").GetValueAsync().ContinueWith(task => {
+			if (task.IsFaulted) {
+				// Handle the error...
+			} else if (task.IsCompleted) {
+				DataSnapshot snapshot = task.Result;
+				// Do something with snapshot...
+				Debug.Log("Here" + snapshot.Value);
+				string json = snapshot.GetRawJsonValue();
+				Dictionary<string, Dictionary<string, string>> UserDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string,string>>>(json);
+				foreach (var ele in UserDict.Values) {
 
-		 }
-	  });
+					Debug.Log(ele["username"]);
+					Debug.Log(ele["email"]);
+				}
+
+				User user = JsonUtility.FromJson<User>(json);
+
+			}
+		});
 	}
 }
