@@ -12,6 +12,7 @@ public class DBScript : MonoBehaviour {
 	public InputField _name;
 	public InputField _email;
 	public Text txtLoadData;
+	private int UID;
 
 	// Start is called before the first frame update
 	void Start() {
@@ -23,39 +24,51 @@ public class DBScript : MonoBehaviour {
 
 	}
 
-	private void writeNewUser(string userId, string name, string email) {
+	private void WriteNewUser(string userId, string name, string email) {
 		DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
-		User user = new User(name, email);
+		UID = int.Parse(userId);
+		User user = new User(UID, name, email);
 		string json = JsonUtility.ToJson(user);
-
-		reference.Child("users").Child(userId).SetRawJsonValueAsync(json);
+		string key = reference.Child("Users").Push().Key;
+		reference.Child("Users").Child(key).SetRawJsonValueAsync(json);
 	}
 
 	public void SaveDB() {
 		string name = _name.text;
 		string email = _email.text;
-		writeNewUser(userId, name, email);
+		WriteNewUser(userId, name, email);
 	}
 
 	public void RetrieveData() {
 		FirebaseDatabase reference = FirebaseDatabase.DefaultInstance;
-		reference.GetReference("users").GetValueAsync().ContinueWith(task => {
+		reference.GetReference("Users").GetValueAsync().ContinueWith(task => {
 			if (task.IsFaulted) {
 				// Handle the error...
 			} else if (task.IsCompleted) {
 				DataSnapshot snapshot = task.Result;
+				Debug.Log("kei : " + snapshot.Key);
+				Debug.Log("chi : " + snapshot.ChildrenCount);
 				// Do something with snapshot...
-				Debug.Log("Here" + snapshot.Value);
+				Debug.Log("Here" + snapshot.Children);
+				List<User> userList = new List<User>();
+				foreach (DataSnapshot ele in snapshot.Children) {
+					Debug.Log(" what ");
+					//Debug.Log();
+					userList.Add(JsonUtility.FromJson<User>(ele.GetRawJsonValue()));
+				}
+				Debug.Log("focus : " + userList[0].UID);
 				string json = snapshot.GetRawJsonValue();
-				Dictionary<string, Dictionary<string, string>> UserDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string,string>>>(json);
+				Dictionary<string, Dictionary<string, string>> UserDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(json);
+
+				foreach (var ele in UserDict.Keys) {
+					Debug.Log("KEY1: " + ele);
+				}
+
 				foreach (var ele in UserDict.Values) {
 
 					Debug.Log(ele["username"]);
 					Debug.Log(ele["email"]);
 				}
-
-				User user = JsonUtility.FromJson<User>(json);
-
 			}
 		});
 	}
