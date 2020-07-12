@@ -11,7 +11,7 @@ public class DBScript : MonoBehaviour {
 	public string userId;
 	public InputField _name;
 	public InputField _email;
-	public Text txtLoadData;
+	public Slider LoadData;
 	private int UID;
 
 	// Start is called before the first frame update
@@ -46,30 +46,49 @@ public class DBScript : MonoBehaviour {
 				// Handle the error...
 			} else if (task.IsCompleted) {
 				DataSnapshot snapshot = task.Result;
-				Debug.Log("kei : " + snapshot.Key);
-				Debug.Log("chi : " + snapshot.ChildrenCount);
 				// Do something with snapshot...
-				Debug.Log("Here" + snapshot.Children);
 				List<User> userList = new List<User>();
 				foreach (DataSnapshot ele in snapshot.Children) {
 					Debug.Log(" what ");
 					//Debug.Log();
 					userList.Add(JsonUtility.FromJson<User>(ele.GetRawJsonValue()));
 				}
-				Debug.Log("focus : " + userList[0].UID);
-				string json = snapshot.GetRawJsonValue();
-				Dictionary<string, Dictionary<string, string>> UserDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(json);
-
-				foreach (var ele in UserDict.Keys) {
-					Debug.Log("KEY1: " + ele);
+				foreach(User user in userList) {
+					string username= user.username;
 				}
+				//string json = snapshot.GetRawJsonValue();
+				//Dictionary<string, Dictionary<string, string>> UserDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(json);
 
-				foreach (var ele in UserDict.Values) {
+				//foreach (var ele in UserDict.Keys) {
+				//	Debug.Log("KEY1: " + ele);
+				//}
 
-					Debug.Log(ele["username"]);
-					Debug.Log(ele["email"]);
-				}
+				//foreach (var ele in UserDict.Values) {
+
+				//	Debug.Log(ele["username"]);
+				//	Debug.Log(ele["email"]);
+				//}
 			}
 		});
+	}
+
+	private void UpdateDB(string userId, string name, string email) {
+		DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
+		string key = reference.Child("Users").Push().Key;
+
+		User user = new User(UID, name);
+		Dictionary<string, Object> userDatas = user.ToDictionary();
+
+		Dictionary<string, Object> childUpdates = new Dictionary<string, Object>();
+		//childUpdates["/scores/" + key] = childUpdates;
+		//childUpdates["/user-scores/" + userId + "/" + key] = childUpdates;
+
+		//mDatabase.UpdateChildrenAsync(childUpdates);
+	}
+
+	public void UserDataUpdate() {
+		string name = _name.text;
+		string email = _email.text;
+		UpdateDB(userId, name, email);
 	}
 }
