@@ -6,8 +6,18 @@ public class ConnectionController : MonoBehaviour
 {
 	public bool isOnline;
 	public bool isOffline;
-	
-	void isState() {
-
+	private void Start() {
+		isOffline = false;
+		isOnline = false;
 	}
+	public void Online() {
+		isOffline = false;
+		isOnline = true;
+	}
+	public void Offline() {
+		isOnline = false;
+		isOffline = true;
+	}
+
+
 }

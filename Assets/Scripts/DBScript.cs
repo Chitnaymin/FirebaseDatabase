@@ -11,8 +11,9 @@ public class DBScript : MonoBehaviour {
 	public string userId;
 	public InputField _name;
 	public InputField _email;
-	public Slider LoadData;
+	public Text txtData;
 	private int UID;
+	List<User> userList = new List<User>();
 
 	// Start is called before the first frame update
 	void Start() {
@@ -47,15 +48,16 @@ public class DBScript : MonoBehaviour {
 			} else if (task.IsCompleted) {
 				DataSnapshot snapshot = task.Result;
 				// Do something with snapshot...
-				List<User> userList = new List<User>();
+				
 				foreach (DataSnapshot ele in snapshot.Children) {
-					Debug.Log(" what ");
 					//Debug.Log();
 					userList.Add(JsonUtility.FromJson<User>(ele.GetRawJsonValue()));
 				}
-				foreach(User user in userList) {
-					string username= user.username;
-				}
+				string username= userList[0].username;
+				string email = userList[0].email;
+				Debug.Log(userList[0].email);
+				
+				
 				//string json = snapshot.GetRawJsonValue();
 				//Dictionary<string, Dictionary<string, string>> UserDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(json);
 
@@ -84,6 +86,9 @@ public class DBScript : MonoBehaviour {
 		//childUpdates["/user-scores/" + userId + "/" + key] = childUpdates;
 
 		//mDatabase.UpdateChildrenAsync(childUpdates);
+	}
+	public void Show() {
+		txtData.text = "Username : " + userList[0].username + "\n" + "Email : " + userList[0].email;
 	}
 
 	public void UserDataUpdate() {
