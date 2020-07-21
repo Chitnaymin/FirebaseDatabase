@@ -35,43 +35,53 @@ public class DBScript : MonoBehaviour {
 	}
 
 	public void SaveDB() {
-		string name = _name.text;
-		string email = _email.text;
-		WriteNewUser(userId, name, email);
+		if (ConnectionController.Instance().isOnline == true) {
+			string name = _name.text;
+			string email = _email.text;
+			WriteNewUser(userId, name, email);
+		} else {
+			return;
+		}
+		
 	}
 
 	public void RetrieveData() {
-		FirebaseDatabase reference = FirebaseDatabase.DefaultInstance;
-		reference.GetReference("Users").GetValueAsync().ContinueWith(task => {
-			if (task.IsFaulted) {
-				// Handle the error...
-			} else if (task.IsCompleted) {
-				DataSnapshot snapshot = task.Result;
-				// Do something with snapshot...
-				
-				foreach (DataSnapshot ele in snapshot.Children) {
-					//Debug.Log();
-					userList.Add(JsonUtility.FromJson<User>(ele.GetRawJsonValue()));
+		if (ConnectionController.Instance().isOnline == true) {
+
+			FirebaseDatabase reference = FirebaseDatabase.DefaultInstance;
+			reference.GetReference("Users").GetValueAsync().ContinueWith(task => {
+				if (task.IsFaulted) {
+					// Handle the error...
+				} else if (task.IsCompleted) {
+					DataSnapshot snapshot = task.Result;
+					// Do something with snapshot...
+
+					foreach (DataSnapshot ele in snapshot.Children) {
+						//Debug.Log();
+						userList.Add(JsonUtility.FromJson<User>(ele.GetRawJsonValue()));
+					}
+					string username = userList[0].username;
+					string email = userList[0].email;
+					Debug.Log(userList[0].email);
+
+
+					//string json = snapshot.GetRawJsonValue();
+					//Dictionary<string, Dictionary<string, string>> UserDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(json);
+
+					//foreach (var ele in UserDict.Keys) {
+					//	Debug.Log("KEY1: " + ele);
+					//}
+
+					//foreach (var ele in UserDict.Values) {
+
+					//	Debug.Log(ele["username"]);
+					//	Debug.Log(ele["email"]);
+					//}
 				}
-				string username= userList[0].username;
-				string email = userList[0].email;
-				Debug.Log(userList[0].email);
-				
-				
-				//string json = snapshot.GetRawJsonValue();
-				//Dictionary<string, Dictionary<string, string>> UserDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(json);
-
-				//foreach (var ele in UserDict.Keys) {
-				//	Debug.Log("KEY1: " + ele);
-				//}
-
-				//foreach (var ele in UserDict.Values) {
-
-				//	Debug.Log(ele["username"]);
-				//	Debug.Log(ele["email"]);
-				//}
-			}
-		});
+			});
+		} else {
+			return;
+		}
 	}
 
 	private void UpdateDB(string userId, string name, string email) {
