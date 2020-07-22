@@ -8,12 +8,14 @@ using Firebase.Database;
 using Newtonsoft.Json;
 
 public class DBScript : MonoBehaviour {
-	public string userId;
+	private string userId;
 	public InputField _name;
 	public InputField _email;
 	public Text txtData;
 	private int UID;
 	List<User> userList = new List<User>();
+	public GameObject OnNoti;
+	public GameObject OffNoti;
 
 	// Start is called before the first frame update
 	void Start() {
@@ -40,6 +42,7 @@ public class DBScript : MonoBehaviour {
 			string email = _email.text;
 			WriteNewUser(userId, name, email);
 		} else {
+			Debug.Log("Your are offline!");
 			return;
 		}
 		
@@ -80,6 +83,7 @@ public class DBScript : MonoBehaviour {
 				}
 			});
 		} else {
+			Debug.Log("Your are offline!");
 			return;
 		}
 	}
@@ -105,5 +109,20 @@ public class DBScript : MonoBehaviour {
 		string name = _name.text;
 		string email = _email.text;
 		UpdateDB(userId, name, email);
+	}
+
+	public void BtnOn_Gotit() {
+		OnNoti.SetActive(false);
+	}
+
+	public void BtnOff_Gotit() {
+		OffNoti.SetActive(false);
+	}
+
+	public void btnOnline() {
+		OnNoti.SetActive(true);
+	}
+	public void btnOffline() {
+		OffNoti.SetActive(true);
 	}
 }
